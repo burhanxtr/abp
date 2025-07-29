@@ -33,7 +33,7 @@ public class AbpAIModule : AbpModule
 
         services.AddTransient(typeof(IChatClient<>), typeof(AbpChatClient<>));
 
-        Configure((Options.ChatClientProviderOptions options) =>
+        Configure((ChatClientProviderOptions options) =>
         {
             options.ChatClients = configuration.GetSection("ChatClients").Get<Dictionary<string, ChatClientOptions>>() ?? new();
         });

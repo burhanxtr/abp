@@ -37,7 +37,7 @@ public class ChatClientResolver : IChatClientResolver, ITransientDependency
         if(chatClientConfiguration == null)
         {
             // TODO: Proper Exception Type
-            throw new UserFriendlyException($"Chat client configuration with name '{name}' not found. Please configure the chat client first.");
+            throw new Exception($"Chat client configuration with name '{name}' not found. ({ChatClientConfigurationStore.GetType().FullName}) Please configure the chat client first.");
         }
 
         if(!Options.ChatClientFactories.TryGetValue(chatClientConfiguration.Provider, out var factoryType))

@@ -11,11 +11,11 @@ namespace Volo.Abp.AI.Configuration;
 [Dependency(ReplaceServices = true)]
 [ExposeServices(typeof(IChatClientConfigurationStore))]
 public class DefaultChatClientConfigurationStore(
-    IOptions<Options.ChatClientProviderOptions> options) : IChatClientConfigurationStore
+    IOptions<ChatClientProviderOptions> options) : IChatClientConfigurationStore
 {
-    protected Options.ChatClientProviderOptions Options { get; private set; } = options.Value;
+    protected ChatClientProviderOptions Options { get; private set; } = options.Value;
 
-    public Task<ChatClientConfigurationItem?> GetOrNullAsync(string name)
+    public virtual Task<ChatClientConfigurationItem?> GetOrNullAsync(string name)
     {
         if (Options.ChatClients.TryGetValue(name, out var chatClient))
         {
