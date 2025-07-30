@@ -97,6 +97,7 @@ public class AbpChatClient : IChatClient
 
     public virtual async Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken cancellationToken = default)
     {
+        await CheckClientConfigurationAsync();
         PrepareOptions(ref options);
 
         return await ChatClient.GetResponseAsync(
@@ -108,6 +109,7 @@ public class AbpChatClient : IChatClient
         ChatOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
+        await CheckClientConfigurationAsync();  
         PrepareOptions(ref options);
 
         await foreach(var update in ChatClient.GetStreamingResponseAsync(
@@ -120,6 +122,20 @@ public class AbpChatClient : IChatClient
     public object? GetService(Type serviceType, object? serviceKey = null)
     {
         return ChatClient?.GetService(serviceType, serviceKey);
+    }
+
+    protected virtual Task CheckClientConfigurationAsync()
+    {
+        if(ChatClientConfiguration == null)
+        {
+            throw new AbpException("Chat client configuration is not set. Please set it in the configuration.");
+        }
+
+        if(!ChatClientConfiguration.IsActive)
+        {
+            throw new BusinessException($"The Chat Client '{Name}' is not active currently!");
+        }
+        return Task.CompletedTask;
     }
 
     protected virtual void PrepareOptions(ref ChatOptions? options)
